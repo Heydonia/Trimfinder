@@ -1,0 +1,35 @@
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+export async function GET(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session || (session.user as any)?.role !== 'admin') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const books = await prisma.sourceBook.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      _count: {
+        select: { pages: true },
+      },
+    },
+  });
+
+  return NextResponse.json({
+    sourceBooks: books.map((book) => ({
+      id: book.id,
+      modelName: book.modelName,
+      year: book.year,
+      filePath: book.filePath,
+      createdAt: book.createdAt,
+      pageCount: book._count.pages,
+    })),
+  });
+}
+

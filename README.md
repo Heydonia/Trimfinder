@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## TrimFinder
 
-## Getting Started
+Upload Toyota source-book PDFs, extract per-page text, and search for trims or features with instant PDF previews.
 
-First, run the development server:
+### Tech stack
+
+- Next.js 14 (App Router, TypeScript)
+- Prisma + SQLite
+- pdf-parse for text extraction
+- NextAuth credentials auth
+
+### Setup
 
 ```bash
+npm install
+npx prisma migrate dev --name init
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit `http://localhost:3000` for the login/search UI, `http://localhost:3000/accounts` for managing dealership logins (admins only), and `http://localhost:3000/upload` to ingest source books (admins only).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env` file with:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+DATABASE_URL="file:./dev.db"
+ADMIN_EMAIL="dealer@example.com"      # env-based admin (optional)
+ADMIN_PASSWORD="change-me"
+USER_EMAIL="agent@example.com"        # env-based regular user (optional)
+USER_PASSWORD="change-me"
+NEXTAUTH_SECRET="set-a-strong-secret"
+NEXTAUTH_URL="http://localhost:3000"
+```
 
-## Learn More
+You can also create additional users from the Accounts page (admin role required). Only admin users can access `/upload` and `/accounts`.
 
-To learn more about Next.js, take a look at the following resources:
+### Data flow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Upload a PDF with model name + optional year.
+2. The file is stored under `public/uploads/`.
+3. Text is extracted per page and stored in SQLite (`SourceBook` + `Page` tables).
+4. Keyword searches hit `/api/search`, returning ranked pages with snippets.
+5. Selecting a result opens the PDF in a new tab using `#page=<n>`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Useful scripts
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` – start the development server on port 3000.
+- `npm run build && npm run start` – production build + serve.
+- `npm run lint` – run ESLint.
+- `npm run prisma:studio` – open Prisma Studio.

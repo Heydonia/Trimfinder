@@ -1,0 +1,767 @@
+:root {
+  --bg: #050607;
+  --bg-accent: radial-gradient(
+    circle at top,
+    rgba(255, 255, 255, 0.06),
+    transparent 45%
+  );
+  --fg: #f4f5f7;
+  --muted: #98a2b3;
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #d22630;
+  --accent-dark: #a81822;
+  --surface: rgba(12, 13, 15, 0.85);
+  --blur: 14px;
+  --font-heading:
+    "Inter", "SF Pro Display", -apple-system, system-ui, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-body:
+    "Inter", "SF Pro Display", -apple-system, system-ui, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--fg);
+  font-family: var(--font-body);
+  background:
+    var(--bg-accent),
+    linear-gradient(135deg, #050607 0%, #0b1017 60%, #101820 100%);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.home {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px 96px;
+  text-align: center;
+  gap: 18px;
+}
+
+.homeContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: calc(100vh - 120px);
+  width: 100%;
+}
+
+.home::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 255, 255, 0.05),
+      transparent 50%
+    ),
+    repeating-linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.025),
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px,
+      transparent 24px
+    );
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.home::after {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(210, 38, 48, 0.25), transparent 70%);
+  bottom: -200px;
+  filter: blur(40px);
+  z-index: 0;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1;
+}
+
+.hero h1 {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: clamp(2.8rem, 6vw, 3.6rem);
+  margin: 0;
+}
+
+.hero p {
+  margin: 6px auto 0;
+  max-width: 540px;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.badge {
+  align-self: center;
+  padding: 6px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(210, 38, 48, 0.4);
+  background: rgba(210, 38, 48, 0.15);
+  color: #ffd9de;
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+}
+
+.search {
+  width: min(640px, 100%);
+  display: flex;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(var(--blur));
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  z-index: 1;
+}
+
+.search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  padding: 10px 4px 10px 20px;
+  transition:
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.search input::placeholder {
+  color: var(--muted);
+}
+
+.search input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow:
+    inset 0 0 0 1px rgba(210, 38, 48, 0.4),
+    0 0 0 4px rgba(210, 38, 48, 0.15);
+}
+
+.searchButton {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 26px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  box-shadow: 0 12px 25px rgba(210, 38, 48, 0.35);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.searchButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(210, 38, 48, 0.45);
+}
+
+.searchButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.libraryToggle {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 12px 22px;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.libraryToggle:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.libraryToggle:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.helper {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  z-index: 1;
+}
+
+.status {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  z-index: 1;
+}
+
+.status.error {
+  color: #f87171;
+}
+
+.disclaimer {
+  margin-top: auto;
+  padding-top: 64px;
+  padding-bottom: 16px;
+  color: rgba(255, 255, 255, 0.15);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.headerButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.pill {
+  border-radius: 999px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  color: var(--fg);
+  background: transparent;
+}
+
+.pill.ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--muted);
+}
+
+.uploadForm {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.uploadForm input,
+.uploadForm button {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--fg);
+}
+
+.uploadForm input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.uploadForm button {
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  border: none;
+}
+
+.status {
+  min-height: 20px;
+}
+
+.sourceBooks {
+  margin-top: 32px;
+  text-align: left;
+}
+
+.sourceBooks h2 {
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.sourceBooksList {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sourceBookRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg);
+  backdrop-filter: blur(var(--blur));
+}
+
+.sourceBookRow strong {
+  color: var(--fg);
+}
+
+.sourceBookMeta {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.sourceBookActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.sourceBookActions a {
+  color: #ffd2d6;
+  font-weight: 500;
+}
+
+.deleteButton {
+  border: 1px solid rgba(248, 113, 113, 0.6);
+  background: rgba(248, 113, 113, 0.15);
+  color: #fecaca;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.deleteButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.adminGate {
+  max-width: 520px;
+  margin: 0 auto;
+  padding-bottom: 96px;
+  text-align: center;
+}
+
+.unlockForm {
+  margin-top: 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.unlockForm input {
+  padding: 12px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg);
+}
+
+.unlockForm input::placeholder {
+  color: var(--muted);
+}
+
+.unlockForm button {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.authShell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  min-height: calc(100vh - 160px);
+  width: 100%;
+}
+
+.authCard {
+  width: min(420px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+  border-radius: 24px;
+  background: rgba(12, 13, 15, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(18px);
+}
+
+.authCard input {
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--fg);
+}
+
+.authCard input::placeholder {
+  color: var(--muted);
+}
+
+.authCard button {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 12px 25px rgba(210, 38, 48, 0.4);
+}
+
+.authHint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+}
+
+
+.signout {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease;
+}
+
+.actions {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.actions .pill {
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.actions button.pill {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.6);
+  transition: opacity 0.2s ease;
+}
+
+.actions button.pill:hover {
+  opacity: 0.85;
+}
+
+.rememberRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 400;
+}
+
+.rememberRow input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+}
+
+.rememberLabel {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.actions {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.accounts {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: min(720px, 100%);
+}
+
+.accountCard {
+  background: rgba(12, 13, 15, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(16px);
+}
+
+.accountForm {
+  display: grid;
+  gap: 12px;
+}
+
+.accountForm input,
+.accountForm select {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--fg);
+}
+
+.accountForm button {
+  border-radius: 999px;
+  border: none;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.accountCard table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.accountCard th,
+.accountCard td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.accountCard select {
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+
+.accountCard button {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 6px 14px;
+}
+
+.roleTag {
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.accountActions {
+  display: flex;
+  gap: 8px;
+}
+
+.accountActions button {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 6px 14px;
+}
+
+.libraryOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 6, 7, 0.85);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  z-index: 20;
+}
+
+.libraryModal {
+  width: min(900px, 100%);
+  max-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px;
+  border-radius: 28px;
+  background: rgba(12, 13, 15, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+}
+
+.libraryHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.libraryHeader h2 {
+  margin: 4px 0 0;
+}
+
+.libraryEyebrow {
+  margin: 0;
+  letter-spacing: 0.2em;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.libraryControls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.librarySearch {
+  flex: 1;
+  min-width: 240px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--fg);
+  padding: 12px 18px;
+}
+
+.libraryBody {
+  flex: 1;
+  overflow: hidden;
+}
+
+.libraryList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: calc(100% - 8px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.libraryRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.libraryMeta {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+.libraryActions a {
+  color: #ffd2d6;
+  font-weight: 600;
+}
+
+.libraryActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .search {
+    flex-direction: column;
+    border-radius: 24px;
+  }
+
+  .search input {
+    width: 100%;
+  }
+
+  .searchButton,
+  .libraryToggle {
+    width: 100%;
+  }
+
+  .libraryModal {
+    padding: 20px;
+  }
+
+  .libraryHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .libraryControls {
+    flex-direction: column;
+  }
+
+  .libraryRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .libraryActions {
+    width: 100%;
+  }
+}
