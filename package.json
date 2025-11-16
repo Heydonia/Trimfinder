@@ -10,6 +10,7 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@flydotio/litestream": "^1.0.1",
     "@prisma/client": "^5.18.0",
     "bcryptjs": "^3.0.3",
     "next": "14.2.33",
@@ -26,5 +27,8 @@
     "eslint-config-next": "14.2.9",
     "prisma": "^5.18.0",
     "typescript": "^5.6.3"
+  },
+  "dockerfile": {
+    "litestream": true
   }
 }
