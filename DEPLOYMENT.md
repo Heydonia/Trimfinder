@@ -16,14 +16,9 @@ Run your migrations against the production database once:
 npx prisma migrate deploy
 ```
 
-### 2. Move PDF Storage Off the Filesystem
+### 2. Configure Object Storage
 
-`/api/upload` currently writes PDFs into `public/uploads/`, which is read-only in Vercel. Choose one of:
-
-- **Object storage**: S3, R2, or Supabase Storage. Update `/api/upload` and `/api/source-books/[id]` to write/delete files there and store the public URL in `filePath`.
-- **Vercel Blob** (beta): swap the `fs` calls with the Vercel Blob SDK.
-
-Until you make that change, uploads will only work locally; production deploys should point to a bucket that already contains the PDFs.
+Uploads now use S3-compatible storage by default. Set the `S3_*` environment variables (bucket, region, access keys, and optional endpoint/public URL) so `/api/upload` writes PDFs to your bucket and `/api/source-books/[id]` deletes them there. Without those variables the app falls back to `public/uploads/`, which only works locally.
 
 ### 3. Required Environment Variables
 
@@ -31,12 +26,13 @@ Add these under **Project → Settings → Environment Variables** (or via `verc
 
 | Variable | Description |
 | --- | --- |
-| `DATABASE_URL` | Connection string for the hosted Postgres/PlanetScale DB. |
+| `DATABASE_URL` | Connection string for the hosted Postgres DB. |
 | `NEXTAUTH_SECRET` | Generate with `openssl rand -hex 32`. |
 | `NEXTAUTH_URL` | `https://trimfinder.vercel.app` (or your custom domain). |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Optional bootstrap admin credentials. |
 | `USER_EMAIL` / `USER_PASSWORD` | Optional bootstrap non-admin user. |
-| Storage keys | Whatever your chosen storage vendor requires (e.g., `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`). |
+| `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | Required for storing PDFs in S3/R2/Supabase Storage. |
+| `S3_ENDPOINT` / `S3_PUBLIC_URL_BASE` | Optional overrides for non-AWS providers/CDNs. |
 
 > Tip: run `vercel env pull .env.production` to sync settings locally.
 
@@ -76,12 +72,13 @@ vercel --prod              # manual production deploy
 
 Fly is now pre-configured in this repo (`fly.toml`, `Dockerfile`, `.dockerignore`, GitHub Action). Here’s how to use it:
 
-1. `fly auth login` and run `fly deploy` from the project root. The existing `trimfinder-app` plus the attached Postgres cluster `trimfinder-db` and `uploads` volume will be used automatically.
-2. Secrets already staged:
-   - `DATABASE_URL` (from the attached Fly Postgres cluster)
+1. `fly auth login` and run `fly deploy` from the project root. The existing `trimfinder-app` plus the attached Postgres cluster `trimfinder-db` (and optional uploads volume for local fallback) will be used automatically.
+2. Required secrets:
+   - `DATABASE_URL` (already set when we attached the Fly Postgres cluster)
    - `NEXTAUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `USER_EMAIL`, `USER_PASSWORD`
-   - Adjust via `fly secrets set KEY=value`.
-3. Uploaded PDFs are persisted on the `uploads` volume mounted at `/app/public/uploads`. Scale to multiple machines only if you replace local storage with S3/R2.
+   - `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, and optional `S3_ENDPOINT` / `S3_PUBLIC_URL_BASE`
+   - Set/rotate via `fly secrets set KEY=value`.
+3. PDFs are served from S3/R2 when the secrets above exist; otherwise the app still falls back to the `uploads` volume mounted at `/app/public/uploads`.
 4. The Docker image runs `npx prisma migrate deploy && npm run start` on boot, so Prisma stays in sync with the Postgres schema.
 5. Optional GitHub Actions deploy: set `FLY_API_TOKEN` in repo secrets and the provided workflow will deploy on every push to `main`.
 

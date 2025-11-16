@@ -75,6 +75,8 @@ export function buildSnippet(text: string, keywords: string[], radius = 120): st
 }
 
 export function toPublicPath(filePath: string): string {
+  // Deprecated – kept for compatibility. Real conversion happens via getPublicUrl.
+  if (filePath.startsWith('http://') || filePath.startsWith('https://')) return filePath;
   if (filePath.startsWith('/uploads/')) return filePath;
   const idx = filePath.lastIndexOf('/uploads/');
   if (idx >= 0) return filePath.slice(idx);

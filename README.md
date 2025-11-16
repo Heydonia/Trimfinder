@@ -5,7 +5,7 @@ Upload Toyota source-book PDFs, extract per-page text, and search for trims or f
 ### Tech stack
 
 - Next.js 14 (App Router, TypeScript)
-- Prisma + SQLite
+- Prisma + PostgreSQL (local dev can point at SQLite if needed, but production uses Postgres)
 - pdf-parse for text extraction
 - NextAuth credentials auth
 
@@ -29,6 +29,15 @@ USER_EMAIL="agent@example.com"        # env-based regular user (optional)
 USER_PASSWORD="change-me"
 NEXTAUTH_SECRET="set-a-strong-secret"
 NEXTAUTH_URL="http://localhost:3000"
+
+# S3 / R2 storage (required in production, optional locally)
+S3_BUCKET="trimfinder-pdfs"
+S3_REGION="us-east-1"
+S3_ACCESS_KEY_ID="AKIA..."
+S3_SECRET_ACCESS_KEY="..."
+# Optional overrides:
+S3_ENDPOINT="https://<account>.r2.cloudflarestorage.com"
+S3_PUBLIC_URL_BASE="https://cdn.example.com/trimfinder-pdfs"
 ```
 
 You can also create additional users from the Accounts page (admin role required). Only admin users can access `/upload` and `/accounts`.
@@ -36,8 +45,8 @@ You can also create additional users from the Accounts page (admin role required
 ### Data flow
 
 1. Upload a PDF with model name + optional year.
-2. The file is stored under `public/uploads/`.
-3. Text is extracted per page and stored in SQLite (`SourceBook` + `Page` tables).
+2. The file is stored in your configured object storage bucket when the `S3_*` variables are present (falls back to `public/uploads/` for local development).
+3. Text is extracted per page and stored in PostgreSQL (`SourceBook` + `Page` tables).
 4. Keyword searches hit `/api/search`, returning ranked pages with snippets.
 5. Selecting a result opens the PDF in a new tab using `#page=<n>`.
 
