@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { deleteStoredFile } from '@/lib/storage';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 type RouteContext = {
   params: {
@@ -37,7 +38,16 @@ export async function DELETE(req: Request, { params }: RouteContext) {
     prisma.sourceBook.delete({ where: { id } }),
   ]);
 
-  await deleteStoredFile(sourceBook.filePath);
+  if (sourceBook.filePath) {
+    const resolvedPath = path.join(process.cwd(), 'public', sourceBook.filePath.replace(/^\//, ''));
+    try {
+      await fs.unlink(resolvedPath);
+    } catch (error: any) {
+      if (error?.code !== 'ENOENT') {
+        console.warn('Failed to delete file', resolvedPath, error);
+      }
+    }
+  }
 
   return NextResponse.json({ ok: true });
 }

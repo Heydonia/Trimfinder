@@ -3,7 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { extractPdfPages } from '@/lib/pdf';
-import { savePdf } from '@/lib/storage';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -38,11 +39,16 @@ export async function POST(req: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+    await fs.mkdir(uploadsDir, { recursive: true });
+
     const safeName =
       modelName.replace(/[^a-z0-9-_]/gi, '_') +
       (year ? `_${year}` : '') +
       `_${Date.now()}.pdf`;
-    const storagePath = await savePdf(buffer, safeName);
+    const absolutePath = path.join(uploadsDir, safeName);
+
+    await fs.writeFile(absolutePath, buffer);
 
     const pages = await extractPdfPages(buffer);
 
@@ -50,7 +56,7 @@ export async function POST(req: Request) {
       data: {
         modelName: modelName.toUpperCase(),
         year,
-        filePath: storagePath,
+        filePath: `/uploads/${safeName}`,
       },
     });
 

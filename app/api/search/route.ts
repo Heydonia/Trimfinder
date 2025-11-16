@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { buildSnippet, parseQuery, scorePage } from '@/lib/search';
-import { getPublicUrl } from '@/lib/storage';
+import { buildSnippet, parseQuery, scorePage, toPublicPath } from '@/lib/search';
 import type { SearchResult } from '@/types';
 
 export const runtime = 'nodejs';
@@ -59,7 +58,7 @@ export async function GET(req: Request) {
         modelName: page.sourceBook.modelName,
         year: page.sourceBook.year,
         pageNumber: page.pageNumber,
-        filePath: getPublicUrl(page.sourceBook.filePath),
+        filePath: toPublicPath(page.sourceBook.filePath),
         snippet: buildSnippet(page.text, normalizedKeywords),
         score,
       };

@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/prisma';
 import { authOptions } from '@/lib/auth';
-import { getPublicUrl } from '@/lib/storage';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -27,12 +26,11 @@ export async function GET() {
       id: book.id,
       modelName: book.modelName,
       year: book.year,
-      filePath: getPublicUrl(book.filePath),
+      filePath: book.filePath,
       createdAt: book.createdAt,
       pageCount: book._count.pages,
     })),
   });
 }
-
 
 
