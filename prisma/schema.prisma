@@ -25,7 +25,6 @@ model Page {
   sourceBook   SourceBook @relation(fields: [sourceBookId], references: [id])
 
   @@index([sourceBookId, pageNumber])
-  @@index([text])
 }
 
 model User {
