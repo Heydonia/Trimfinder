@@ -11,10 +11,11 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat openssl
 COPY package.json package-lock.json ./
 RUN npm ci
+COPY prisma ./prisma
+RUN npx prisma generate
 
 FROM deps AS builder
 COPY . .
-RUN npx prisma generate
 RUN npm run build
 
 FROM base AS runner
