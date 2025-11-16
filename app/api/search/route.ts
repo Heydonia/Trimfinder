@@ -3,6 +3,15 @@ import { prisma } from '@/lib/prisma';
 import { buildSnippet, parseQuery, scorePage, toPublicPath } from '@/lib/search';
 import type { SearchResult } from '@/types';
 
+function toFileRoute(path: string | null): string {
+  if (!path) return '';
+  if (path.startsWith('/files/')) return path;
+  if (path.startsWith('/uploads/')) {
+    return `/files/${path.replace(/^\/uploads\//, '')}`;
+  }
+  return path;
+}
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -58,7 +67,7 @@ export async function GET(req: Request) {
         modelName: page.sourceBook.modelName,
         year: page.sourceBook.year,
         pageNumber: page.pageNumber,
-        filePath: toPublicPath(page.sourceBook.filePath),
+        filePath: toFileRoute(toPublicPath(page.sourceBook.filePath)),
         snippet: buildSnippet(page.text, normalizedKeywords),
         score,
       };

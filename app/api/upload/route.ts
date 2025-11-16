@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       data: {
         modelName: modelName.toUpperCase(),
         year,
-        filePath: `/uploads/${safeName}`,
+        filePath: `/files/${safeName}`,
       },
     });
 

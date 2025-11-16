@@ -75,10 +75,15 @@ export function buildSnippet(text: string, keywords: string[], radius = 120): st
 }
 
 export function toPublicPath(filePath: string): string {
-  if (filePath.startsWith('/uploads/')) return filePath;
+  if (filePath.startsWith('http://') || filePath.startsWith('https://')) return filePath;
+  if (filePath.startsWith('/files/')) return filePath;
+  if (filePath.startsWith('/uploads/')) return filePath.replace(/^\/uploads\//, '/files/');
   const idx = filePath.lastIndexOf('/uploads/');
-  if (idx >= 0) return filePath.slice(idx);
-  return `/uploads/${filePath.replace(/^.*[\\/]/, '')}`;
+  if (idx >= 0) {
+    const basename = filePath.slice(idx + '/uploads/'.length);
+    return `/files/${basename}`;
+  }
+  return `/files/${filePath.replace(/^.*[\\/]/, '')}`;
 }
 
 function escapeRegExp(value: string) {

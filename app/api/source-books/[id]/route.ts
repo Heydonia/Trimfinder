@@ -39,12 +39,15 @@ export async function DELETE(req: Request, { params }: RouteContext) {
   ]);
 
   if (sourceBook.filePath) {
-    const resolvedPath = path.join(process.cwd(), 'public', sourceBook.filePath.replace(/^\//, ''));
-    try {
-      await fs.unlink(resolvedPath);
-    } catch (error: any) {
-      if (error?.code !== 'ENOENT') {
-        console.warn('Failed to delete file', resolvedPath, error);
+    const basename = sourceBook.filePath.replace(/^\/(files|uploads)\//, '');
+    if (basename) {
+      const resolvedPath = path.join(process.cwd(), 'public', 'uploads', basename);
+      try {
+        await fs.unlink(resolvedPath);
+      } catch (error: any) {
+        if (error?.code !== 'ENOENT') {
+          console.warn('Failed to delete file', resolvedPath, error);
+        }
       }
     }
   }
