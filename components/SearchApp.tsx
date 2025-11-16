@@ -9,8 +9,13 @@ type SearchResponse = {
   results: SearchResult[];
 };
 
+type SessionUser = {
+  role?: string;
+};
+
 export function SearchApp() {
   const { data: session } = useSession();
+  const sessionRole = (session?.user as SessionUser | undefined)?.role;
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -117,7 +122,7 @@ export function SearchApp() {
   return (
     <main className="home">
       <div className="actions row">
-        {session?.user?.role === 'admin' && (
+        {sessionRole === 'admin' && (
           <>
             <Link className="pill ghost" href="/accounts">
               Accounts

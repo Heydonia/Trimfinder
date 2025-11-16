@@ -70,3 +70,18 @@ vercel --prod              # manual production deploy
 - Configure branch protections in GitHub so only reviewed PRs deploy.
 - Add monitoring (e.g., Vercel Analytics or Log Drains) to observe `/api/search` performance.
 
+---
+
+## Fly.io Quickstart
+
+Fly is now pre-configured in this repo (`fly.toml`, `Dockerfile`, `.dockerignore`, GitHub Action). Here’s how to use it:
+
+1. `fly auth login` and run `fly deploy` from the project root. The existing `trimfinder-app` plus the attached Postgres cluster `trimfinder-db` and `uploads` volume will be used automatically.
+2. Secrets already staged:
+   - `DATABASE_URL` (from the attached Fly Postgres cluster)
+   - `NEXTAUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `USER_EMAIL`, `USER_PASSWORD`
+   - Adjust via `fly secrets set KEY=value`.
+3. Uploaded PDFs are persisted on the `uploads` volume mounted at `/app/public/uploads`. Scale to multiple machines only if you replace local storage with S3/R2.
+4. The Docker image runs `npx prisma migrate deploy && npm run start` on boot, so Prisma stays in sync with the Postgres schema.
+5. Optional GitHub Actions deploy: set `FLY_API_TOKEN` in repo secrets and the provided workflow will deploy on every push to `main`.
+

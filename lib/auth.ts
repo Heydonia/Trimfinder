@@ -75,7 +75,7 @@ export const authOptions: AuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (token.exp) {
+      if (typeof token.exp === 'number') {
         session.expires = new Date(token.exp * 1000).toISOString();
       }
       (session.user as any).role = token.role;

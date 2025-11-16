@@ -22,7 +22,7 @@ Visit `http://localhost:3000` for the login/search UI, `http://localhost:3000/ac
 Create a `.env` file with:
 
 ```bash
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/trimfinder?schema=public"
 ADMIN_EMAIL="dealer@example.com"      # env-based admin (optional)
 ADMIN_PASSWORD="change-me"
 USER_EMAIL="agent@example.com"        # env-based regular user (optional)
@@ -62,4 +62,5 @@ You can also create additional users from the Accounts page (admin role required
 
 ### Deployment
 
-Production prerequisites and Vercel how-to live in `DEPLOYMENT.md`.
+Production prerequisites and Vercel how-to live in `DEPLOYMENT.md`.  
+Fly.io configuration (`fly.toml`, Dockerfile, volume + Postgres setup) is already checked in; run `fly deploy` after setting any secrets you need.
