@@ -47,3 +47,15 @@ You can also create additional users from the Accounts page (admin role required
 - `npm run build && npm run start` – production build + serve.
 - `npm run lint` – run ESLint.
 - `npm run prisma:studio` – open Prisma Studio.
+
+### GitHub setup
+
+1. Create an empty GitHub repository (no README/license) from the GitHub UI or run `gh repo create <org-or-user>/trimfinder --private --source=. --remote=origin --push`.
+2. If you created the repo in the browser, wire it up locally:
+   ```bash
+   git remote add origin git@github.com:<org-or-user>/trimfinder.git
+   git branch -M main
+   git push -u origin main
+   ```
+3. Add collaborators under **Settings → Collaborators** and configure branch protections as needed.
+4. Future pushes are just `git push` from `main` (or feature branches + PRs).
