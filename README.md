@@ -59,3 +59,7 @@ You can also create additional users from the Accounts page (admin role required
    ```
 3. Add collaborators under **Settings → Collaborators** and configure branch protections as needed.
 4. Future pushes are just `git push` from `main` (or feature branches + PRs).
+
+### Deployment
+
+Production prerequisites and Vercel how-to live in `DEPLOYMENT.md`.
